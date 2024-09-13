@@ -38,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: creative-glyphs
-          path: /build/libs
+          path: ${{ github.workspace }}/target/creative-glyphs-*.jar
