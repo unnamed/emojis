@@ -162,7 +162,7 @@ public final class GlyphsCommand implements CommandClass {
         }
 
         // get the emojis for the current page
-        glyphs = glyphs.subList(page * emojisPerPage, Math.min(len, (page + 1) * emojisPerPage));
+        glyphs = glyphs.subList(page * emojisPerPage, Math.min(len, (page) * emojisPerPage));
 
         TextComponent message = new TextComponent("");
         for (int i = 0; i < glyphs.size(); i++) {
@@ -210,7 +210,7 @@ public final class GlyphsCommand implements CommandClass {
 
         // send the header message
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("header", "Not found"))
-                .replace("<page>", String.valueOf(page + 1))
+                .replace("<page>", String.valueOf(page))
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
 
@@ -219,7 +219,7 @@ public final class GlyphsCommand implements CommandClass {
 
         // send the footer message
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("footer", "Not found"))
-                .replace("<page>", String.valueOf(page + 1))
+                .replace("<page>", String.valueOf(page))
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
     }
