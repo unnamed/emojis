@@ -214,7 +214,7 @@ public final class GlyphsCommand implements CommandClass {
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
 
-        // send the content
+        // send the content 
         sender.spigot().sendMessage(message);
 
         // send the footer message
