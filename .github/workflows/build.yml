@@ -1,41 +1,33 @@
-name: Build
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-  workflow_dispatch:
-
+name: 'build'
+on: [ 'pull_request', 'push' ]
 jobs:
-  Build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Get github short hash
-        id: github_short_hash
-        run: echo "::set-output name=result::$(git rev-parse --short "${{ github.sha }}")"
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: 17
-      - name: Cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            .gradle
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'build.gradle.kts') }}
-      - name: Build with Gradle
-        run: |
-          chmod +x gradlew
-          ./gradlew build
-        timeout-minutes: 10
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: creative-glyphs
-          path: ${{ github.workspace }}/plugin/build/libs
+    build:
+        if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
+        runs-on: 'ubuntu-latest'
+        steps:
+            -   name: 'checkout repo'
+                uses: 'actions/checkout@v2'
+            -   name: 'setup JDK'
+                uses: 'actions/setup-java@v1'
+                with:
+                    java-version: 17
+            -   name: 'build'
+                run: './gradlew shadowJar'
+            -   name: Cache
+                uses: actions/cache@v2
+                with:
+                  path: |
+                    ~/.gradle/caches
+                    ~/.gradle/wrapper
+                    .gradle
+                  key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'build.gradle.kts') }}
+              - name: Build with Gradle
+                run: |
+                  chmod +x gradlew
+                  ./gradlew build
+                timeout-minutes: 10
+              - name: Upload artifacts
+                uses: actions/upload-artifact@v3
+                with:
+                  name: creative-glyphs
+                  path: ${{ github.workspace }}/plugin/build/libs
