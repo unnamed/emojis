@@ -106,8 +106,8 @@ public final class GlyphsCommand implements CommandClass {
 
     @Command(names = { "", "list" })
     @SuppressWarnings("deprecation") // Spigot
-    public void list(final @NotNull CommandSender sender, @OptArg("0") @Named("page") int page) {
-        int _page = page > 0 ? page -1 : page;
+    public void list(final @NotNull CommandSender sender, final @OptArg("1") @Named("page") int page) {
+        int _page = page - 1;
         // load the configuration for listing emojis
         ConfigurationSection listConfig = plugin.getConfig().getConfigurationSection("messages.list");
         if (listConfig == null) {
