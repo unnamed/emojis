@@ -106,7 +106,8 @@ public final class GlyphsCommand implements CommandClass {
 
     @Command(names = { "", "list" })
     @SuppressWarnings("deprecation") // Spigot
-    public void list(final @NotNull CommandSender sender, final @OptArg("0") @Named("page") int page) {
+    public void list(final @NotNull CommandSender sender, @OptArg("0") @Named("page") int page) {
+        if (page > 0) page--;
         // load the configuration for listing emojis
         ConfigurationSection listConfig = plugin.getConfig().getConfigurationSection("messages.list");
         if (listConfig == null) {
@@ -210,7 +211,7 @@ public final class GlyphsCommand implements CommandClass {
 
         // send the header message
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("header", "Not found"))
-                .replace("<page>", String.valueOf(page))
+                .replace("<page>", String.valueOf(page + 1))
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
 
@@ -219,7 +220,7 @@ public final class GlyphsCommand implements CommandClass {
 
         // send the footer message
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("footer", "Not found"))
-                .replace("<page>", String.valueOf(page))
+                .replace("<page>", String.valueOf(page + 1))
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
     }
