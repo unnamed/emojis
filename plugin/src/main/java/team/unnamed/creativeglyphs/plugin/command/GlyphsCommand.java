@@ -211,7 +211,7 @@ public final class GlyphsCommand implements CommandClass {
 
         // send the header message
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("header", "Not found"))
-                .replace("<page>", String.valueOf(page + 1))
+                .replace("<page>", String.valueOf(_page + 1))
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
 
@@ -220,7 +220,7 @@ public final class GlyphsCommand implements CommandClass {
 
         // send the footer message
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("footer", "Not found"))
-                .replace("<page>", String.valueOf(page + 1))
+                .replace("<page>", String.valueOf(_page + 1))
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
     }
