@@ -107,7 +107,7 @@ public final class GlyphsCommand implements CommandClass {
     @Command(names = { "", "list" })
     @SuppressWarnings("deprecation") // Spigot
     public void list(final @NotNull CommandSender sender, @OptArg("0") @Named("page") int page) {
-        if (page > 0) page--;
+        int _page = page > 0 ? page -1 : page;
         // load the configuration for listing emojis
         ConfigurationSection listConfig = plugin.getConfig().getConfigurationSection("messages.list");
         if (listConfig == null) {
@@ -157,13 +157,13 @@ public final class GlyphsCommand implements CommandClass {
         int emojisPerPage = listConfig.getInt("max-emojis-per-page", 30);
         int maxPages = (int) Math.ceil(len / (float) emojisPerPage);
 
-        if (page < 0 || page >= maxPages) {
+        if (_page < 0 || _page >= maxPages) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("invalid-page", "Invalid page")));
             return;
         }
 
         // get the emojis for the current page
-        glyphs = glyphs.subList(page * emojisPerPage, Math.min(len, (page) * emojisPerPage));
+        glyphs = glyphs.subList(_page * emojisPerPage, Math.min(len, (_page + 1) * emojisPerPage));
 
         TextComponent message = new TextComponent("");
         for (int i = 0; i < glyphs.size(); i++) {
