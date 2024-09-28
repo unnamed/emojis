@@ -4,6 +4,7 @@ main: team.unnamed.creativeglyphs.plugin.CreativeGlyphsPlugin
 api-version: 1.13
 description: Unnamed Team's creative-glyphs plugin
 author: Unnamed Team
+folia-supported: true
 depend: [creative-central]
 softdepend:
     - PlaceholderAPI
