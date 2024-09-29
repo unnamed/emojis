@@ -18,6 +18,7 @@ import team.unnamed.creativeglyphs.Glyph;
 import team.unnamed.creativeglyphs.cloud.FileCloudService;
 import team.unnamed.creativeglyphs.plugin.CreativeGlyphsPlugin;
 import team.unnamed.creativeglyphs.plugin.util.Permissions;
+import team.unnamed.creativeglyphs.plugin.util.ScheduleUtil;
 import team.unnamed.creativeglyphs.serialization.GlyphReader;
 import team.unnamed.creativeglyphs.serialization.GlyphWriter;
 
@@ -55,12 +56,12 @@ public final class GlyphsCommand implements CommandClass {
 
     @Command(names = "update", permission = "emojis.admin")
     public void update(final @NotNull CommandSender sender, final @NotNull @Named("id") String id) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> execute(sender, id));
+        ScheduleUtil.GLOBAL.runTaskAsynchronously(plugin, () -> execute(sender, id));
     }
 
     @Command(names = "edit", permission = "emojis.admin")
     public void edit(final @NotNull CommandSender sender) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> edit0(sender));
+        ScheduleUtil.GLOBAL.runTaskAsynchronously(plugin, () -> edit0(sender));
     }
 
     private void edit0(final @NotNull CommandSender sender) {
@@ -87,7 +88,7 @@ public final class GlyphsCommand implements CommandClass {
             }
 
             // synchronous update and save
-            Bukkit.getScheduler().runTask(plugin, () -> {
+            ScheduleUtil.GLOBAL.runTask(plugin, () -> {
                 plugin.registry().setGlyphs(glyphs);
                 plugin.registry().save();
 
@@ -106,7 +107,8 @@ public final class GlyphsCommand implements CommandClass {
 
     @Command(names = { "", "list" })
     @SuppressWarnings("deprecation") // Spigot
-    public void list(final @NotNull CommandSender sender, final @OptArg("0") @Named("page") int page) {
+    public void list(final @NotNull CommandSender sender, final @OptArg("1") @Named("page") int page) {
+        final int pageIndex = page - 1;
         // load the configuration for listing emojis
         ConfigurationSection listConfig = plugin.getConfig().getConfigurationSection("messages.list");
         if (listConfig == null) {
@@ -156,13 +158,13 @@ public final class GlyphsCommand implements CommandClass {
         int emojisPerPage = listConfig.getInt("max-emojis-per-page", 30);
         int maxPages = (int) Math.ceil(len / (float) emojisPerPage);
 
-        if (page < 0 || page >= maxPages) {
+        if (pageIndex < 0 || pageIndex >= maxPages) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("invalid-page", "Invalid page")));
             return;
         }
 
         // get the emojis for the current page
-        glyphs = glyphs.subList(page * emojisPerPage, Math.min(len, (page + 1) * emojisPerPage));
+        glyphs = glyphs.subList(pageIndex * emojisPerPage, Math.min(len, (pageIndex + 1) * emojisPerPage));
 
         TextComponent message = new TextComponent("");
         for (int i = 0; i < glyphs.size(); i++) {
@@ -210,7 +212,7 @@ public final class GlyphsCommand implements CommandClass {
 
         // send the header message
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("header", "Not found"))
-                .replace("<page>", String.valueOf(page + 1))
+                .replace("<page>", String.valueOf(page))
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
 
@@ -219,7 +221,7 @@ public final class GlyphsCommand implements CommandClass {
 
         // send the footer message
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&', listConfig.getString("footer", "Not found"))
-                .replace("<page>", String.valueOf(page + 1))
+                .replace("<page>", String.valueOf(page))
                 .replace("<maxpages>", String.valueOf(maxPages))
         );
     }

@@ -125,7 +125,7 @@ public final class CreativeGlyphsPlugin extends JavaPlugin {
         listen(new CommandPreprocessListener(registry));
 
         // Metrics
-        new Metrics(this, 17168);
+        // new Metrics(this, 17168);
 
         // GitHub Update Checker
         GitHubUpdateChecker.checkAsync(this);

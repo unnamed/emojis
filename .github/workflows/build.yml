@@ -13,3 +13,21 @@ jobs:
                     java-version: 17
             -   name: 'build'
                 run: './gradlew shadowJar'
+            - name: Cache
+              uses: actions/cache@v2
+              with:
+                path: |
+                  ~/.gradle/caches
+                  ~/.gradle/wrapper
+                  .gradle
+                key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'build.gradle.kts') }}
+            - name: Build with Gradle
+              run: |
+                chmod +x gradlew
+                ./gradlew build
+              timeout-minutes: 10
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                name: creative-glyphs
+                path: ${{ github.workspace }}/plugin/build/libs

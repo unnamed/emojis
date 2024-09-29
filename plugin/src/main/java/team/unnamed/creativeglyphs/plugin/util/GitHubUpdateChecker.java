@@ -27,7 +27,7 @@ public final class GitHubUpdateChecker {
     private static final String DOWNLOAD_URL = "https://spigotmc.org/resources/113722/";
 
     public static void checkAsync(final @NotNull CreativeGlyphsPlugin plugin) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> check(plugin));
+        ScheduleUtil.GLOBAL.runTaskAsynchronously(plugin, () -> check(plugin));
     }
 
     public static void check(final @NotNull CreativeGlyphsPlugin plugin) {
