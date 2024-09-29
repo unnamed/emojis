@@ -18,6 +18,7 @@ import team.unnamed.creativeglyphs.Glyph;
 import team.unnamed.creativeglyphs.cloud.FileCloudService;
 import team.unnamed.creativeglyphs.plugin.CreativeGlyphsPlugin;
 import team.unnamed.creativeglyphs.plugin.util.Permissions;
+import team.unnamed.creativeglyphs.plugin.util.ScheduleUtil;
 import team.unnamed.creativeglyphs.serialization.GlyphReader;
 import team.unnamed.creativeglyphs.serialization.GlyphWriter;
 
@@ -55,12 +56,12 @@ public final class GlyphsCommand implements CommandClass {
 
     @Command(names = "update", permission = "emojis.admin")
     public void update(final @NotNull CommandSender sender, final @NotNull @Named("id") String id) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> execute(sender, id));
+        ScheduleUtil.GLOBAL.runTaskAsynchronously(plugin, () -> execute(sender, id));
     }
 
     @Command(names = "edit", permission = "emojis.admin")
     public void edit(final @NotNull CommandSender sender) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> edit0(sender));
+        ScheduleUtil.GLOBAL.runTaskAsynchronously(plugin, () -> edit0(sender));
     }
 
     private void edit0(final @NotNull CommandSender sender) {
@@ -87,7 +88,7 @@ public final class GlyphsCommand implements CommandClass {
             }
 
             // synchronous update and save
-            Bukkit.getScheduler().runTask(plugin, () -> {
+            ScheduleUtil.GLOBAL.runTask(plugin, () -> {
                 plugin.registry().setGlyphs(glyphs);
                 plugin.registry().save();
 
